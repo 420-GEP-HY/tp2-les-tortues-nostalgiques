@@ -67,13 +67,12 @@ public class FluxRSSActivity extends AppCompatActivity {
             XmlPullParser xpp = factory.newPullParser();
             xpp.setInput(url.openConnection().getInputStream(), "UTF_8");
 
-            flux.elements.add(new ElementDeFlux());
+            ElementDeFlux element = new ElementDeFlux();
 
             int typeEvenement = xpp.getEventType();
             boolean dansItem = false;
             while(typeEvenement != XmlPullParser.END_DOCUMENT)
             {
-                ElementDeFlux element = flux.elements.get(flux.elements.size() - 1);
                 if(typeEvenement == XmlPullParser.START_TAG)
                 {
                     if (xpp.getName().equalsIgnoreCase("item"))
@@ -103,12 +102,11 @@ public class FluxRSSActivity extends AppCompatActivity {
                 else if(typeEvenement == XmlPullParser.END_TAG && xpp.getName().equalsIgnoreCase("item"))
                 {
                     dansItem = false;
-                    flux.elements.add(new ElementDeFlux());
+                    flux.elements.add(element);
+                    element = new ElementDeFlux();
                 }
                 typeEvenement = xpp.next();
             }
-            if(flux.elements.size() > 0)
-                flux.elements.remove(flux.elements.size() - 1);
         }
         catch (MalformedURLException e) { }
         catch (XmlPullParserException e) { }
