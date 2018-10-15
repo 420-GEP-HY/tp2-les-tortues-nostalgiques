@@ -73,9 +73,7 @@ public class FluxRSSAdapter extends ArrayAdapter<FluxRSS> {
 
     private void startElementsActivity(int position) {
         Intent fluxRSSActivity = new Intent(getContext(), FluxRSSActivity.class);
-        Bundle b = new Bundle();
-        b.putSerializable("flux", listeFlux.get(position));
-        fluxRSSActivity.putExtra("extra", b);
-        startActivity(getContext(), fluxRSSActivity, new Bundle());
+        fluxRSSActivity.putExtra("url", listeFlux.get(position).url);
+        getContext().startActivity(fluxRSSActivity);
     }
 }
