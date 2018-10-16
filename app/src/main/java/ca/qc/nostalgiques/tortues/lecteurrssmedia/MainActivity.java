@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
-                            ParcourirFlux(new URL(texteAdresse.getText().toString()));
+                            mesFlux.add(LecteurRSS.ParcourirFlux(new URL(texteAdresse.getText().toString())));
                         } catch (MalformedURLException e) {
                         }
                         runOnUiThread(new Runnable() {
@@ -116,48 +116,4 @@ public class MainActivity extends AppCompatActivity {
         sauvegarderDonnees();
         super.onPause();
     }
-
-    public void ParcourirFlux(URL url) {
-        FluxRSS flux = new FluxRSS(url.toString());
-        try {
-            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            factory.setNamespaceAware(false);
-            XmlPullParser xpp = factory.newPullParser();
-            xpp.setInput(url.openConnection().getInputStream(), "UTF_8");
-
-            int typeEvenement = xpp.getEventType();
-            boolean titreTrouve = false;
-            boolean imageTrouve = false;
-            boolean dansImage = false;
-            while (typeEvenement != XmlPullParser.END_DOCUMENT) {
-                if (typeEvenement == XmlPullParser.START_TAG) {
-                    if (!titreTrouve && xpp.getName().equalsIgnoreCase("title")) {
-                        flux.titre = xpp.nextText();
-                        titreTrouve = true;
-                    } else if (!imageTrouve && xpp.getName().equalsIgnoreCase("image"))
-                        dansImage = true;
-                    else if (dansImage && xpp.getName().equalsIgnoreCase("url")) {
-                        if (dansImage) {
-                            String imageUrl = xpp.nextText();
-                            InputStream inputStream = new URL(imageUrl).openConnection().getInputStream();
-                            flux.vignette = BitmapFactory.decodeStream(inputStream);
-                            imageTrouve = true;
-                        }
-                    } else flux.nbElementsNonLus++;
-                }
-                typeEvenement = xpp.next();
-            }
-        } catch (MalformedURLException e) {
-        } catch (XmlPullParserException e) {
-        } catch (IOException e) {
-        }
-
-        mesFlux.add(flux);
-    }
 }
-
-
-
-
-
-

@@ -37,7 +37,7 @@ public class FluxRSSActivity extends AppCompatActivity {
             public void run() {
                 try
                 {
-                    LireFlux(new URL(flux.url));
+                    flux = LecteurRSS.LireFlux(new URL(flux.url));
                 }
                 catch (MalformedURLException e) { }
                 runOnUiThread(new Runnable() {
@@ -56,60 +56,5 @@ public class FluxRSSActivity extends AppCompatActivity {
     private void afficherDonnees(){
         aa = new ElementDeFluxAdapter(this, 0, flux.elements);
         listeElements.setAdapter(aa);
-    }
-
-    public void LireFlux (URL url) {
-        flux = new FluxRSS(url.toString());
-        try
-        {
-            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            factory.setNamespaceAware(false);
-            XmlPullParser xpp = factory.newPullParser();
-            xpp.setInput(url.openConnection().getInputStream(), "UTF_8");
-
-            ElementDeFlux element = new ElementDeFlux();
-
-            int typeEvenement = xpp.getEventType();
-            boolean dansItem = false;
-            while(typeEvenement != XmlPullParser.END_DOCUMENT)
-            {
-                if(typeEvenement == XmlPullParser.START_TAG)
-                {
-                    if (xpp.getName().equalsIgnoreCase("item"))
-                        dansItem = true;
-                    else if (dansItem)
-                    {
-                        if (xpp.getName().equalsIgnoreCase("title"))
-                                element.titre = xpp.nextText();
-                        else if (xpp.getName().equalsIgnoreCase("link"))
-                            element.lien = xpp.nextText();
-                        else if (xpp.getName().equalsIgnoreCase("pubDate"))
-                            element.date = xpp.nextText();
-                        else if (xpp.getName().equalsIgnoreCase("description"))
-                            element.description = xpp.nextText();
-                        else if (xpp.getName().equalsIgnoreCase("enclosure"))
-                        {
-                            try
-                            {
-                                String imageUrl = xpp.nextText();
-                                InputStream inputStream = new URL(imageUrl).openConnection().getInputStream();
-                                element.vignette = BitmapFactory.decodeStream(inputStream);
-                            }
-                            catch (MalformedURLException e) {}
-                        }
-                    }
-                }
-                else if(typeEvenement == XmlPullParser.END_TAG && xpp.getName().equalsIgnoreCase("item"))
-                {
-                    dansItem = false;
-                    flux.elements.add(element);
-                    element = new ElementDeFlux();
-                }
-                typeEvenement = xpp.next();
-            }
-        }
-        catch (MalformedURLException e) { }
-        catch (XmlPullParserException e) { }
-        catch (IOException e ) { }
     }
 }
