@@ -37,6 +37,16 @@ public class ElementDeFluxAdapter extends ArrayAdapter<ElementDeFlux> {
         TextView texteTitre = convertView.findViewById(R.id.texteTitre);
         ImageView imageVignette = convertView.findViewById(R.id.imageVignette);
 
+        imageVignette.setImageBitmap(elements.get(position).vignette);
+        imageVignette.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                elements.get(position).estLu = true;
+                notifyDataSetInvalidated();
+                startLecteurMultimediaActivity(position);
+            }
+        });
+
         texteTitre.setText(elements.get(position).titre);
         if(elements.get(position).estLu)
             texteTitre.setTextColor(Color.GRAY);

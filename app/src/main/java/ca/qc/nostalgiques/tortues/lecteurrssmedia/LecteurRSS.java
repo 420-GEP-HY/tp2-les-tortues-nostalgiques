@@ -90,7 +90,7 @@ public final class LecteurRSS {
                         {
                             try
                             {
-                                String imageUrl = xpp.nextText();
+                                String imageUrl = xpp.getAttributeValue(null, "url");
                                 InputStream inputStream = new URL(imageUrl).openConnection().getInputStream();
                                 element.vignette = BitmapFactory.decodeStream(inputStream);
                             }
