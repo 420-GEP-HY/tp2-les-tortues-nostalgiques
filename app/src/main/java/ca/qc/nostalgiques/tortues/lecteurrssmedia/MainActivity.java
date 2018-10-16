@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         Button boutonAjouter = findViewById(R.id.boutonAjouter);
 
         chargerDonnees();
-        if (mesFlux == null)
+        if(mesFlux == null)
             mesFlux = new ArrayList<FluxRSS>();
 
         boutonAjouter.setOnClickListener(new View.OnClickListener() {
@@ -60,10 +60,11 @@ public class MainActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        try {
+                        try
+                        {
                             ParcourirFlux(new URL(texteAdresse.getText().toString()));
-                        } catch (MalformedURLException e) {
                         }
+                        catch (MalformedURLException e) { }
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -81,12 +82,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void afficherDonnees() {
+    void afficherDonnees(){
         aa = new FluxRSSAdapter(this, 0, mesFlux);
         listeFlux.setAdapter(aa);
     }
 
-    void chargerDonnees() {
+    void chargerDonnees(){
         try {
             FileInputStream fis = getApplicationContext().openFileInput("mesflux");
             ObjectInputStream is = new ObjectInputStream(fis);
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void sauvegarderDonnees() {
+    void sauvegarderDonnees(){
         try {
             FileOutputStream fos = getApplicationContext().openFileOutput("mesflux", Context.MODE_PRIVATE);
             ObjectOutputStream od = new ObjectOutputStream(fos);
@@ -117,9 +118,10 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    public void ParcourirFlux(URL url) {
+    public void ParcourirFlux (URL url) {
         FluxRSS flux = new FluxRSS(url.toString());
-        try {
+        try
+        {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(false);
             XmlPullParser xpp = factory.newPullParser();
@@ -129,33 +131,37 @@ public class MainActivity extends AppCompatActivity {
             boolean titreTrouve = false;
             boolean imageTrouve = false;
             boolean dansImage = false;
-            while (typeEvenement != XmlPullParser.END_DOCUMENT) {
-                if (typeEvenement == XmlPullParser.START_TAG) {
-                    if (!titreTrouve && xpp.getName().equalsIgnoreCase("title")) {
+            while(typeEvenement != XmlPullParser.END_DOCUMENT)
+            {
+                if(typeEvenement == XmlPullParser.START_TAG) {
+                    if (!titreTrouve && xpp.getName().equalsIgnoreCase("title"))
+                    {
                         flux.titre = xpp.nextText();
                         titreTrouve = true;
-                    } else if (!imageTrouve && xpp.getName().equalsIgnoreCase("image"))
+                    }
+                    else if (!imageTrouve && xpp.getName().equalsIgnoreCase("image"))
                         dansImage = true;
-                    else if (dansImage && xpp.getName().equalsIgnoreCase("url")) {
-                        if (dansImage) {
+                    else if (dansImage && xpp.getName().equalsIgnoreCase("url"))
+                    {
+                        if (dansImage)
+                        {
                             String imageUrl = xpp.nextText();
-                            InputStream inputStream = new URL(imageUrl).openConnection().getInputStream();
-                            flux.vignette = BitmapFactory.decodeStream(inputStream);
+                            flux.vignette= imageUrl;
                             imageTrouve = true;
                         }
-                    } else flux.nbElementsNonLus++;
+                    }
+                    else flux.nbElementsNonLus++;
                 }
                 typeEvenement = xpp.next();
             }
-        } catch (MalformedURLException e) {
-        } catch (XmlPullParserException e) {
-        } catch (IOException e) {
         }
+        catch (MalformedURLException e) { }
+        catch (XmlPullParserException e) { }
+        catch (IOException e ) { }
 
         mesFlux.add(flux);
     }
 }
-
 
 
 

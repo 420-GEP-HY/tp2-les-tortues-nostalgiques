@@ -3,6 +3,7 @@ package ca.qc.nostalgiques.tortues.lecteurrssmedia;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -18,6 +19,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class FluxRSSActivity extends AppCompatActivity {
+
     FluxRSS flux;
     ArrayAdapter aa;
     ListView listeElements;
@@ -89,13 +91,13 @@ public class FluxRSSActivity extends AppCompatActivity {
                             element.description = xpp.nextText();
                         else if (xpp.getName().equalsIgnoreCase("enclosure"))
                         {
-                            try
-                            {
-                                String imageUrl = xpp.nextText();
-                                InputStream inputStream = new URL(imageUrl).openConnection().getInputStream();
-                                element.vignette = BitmapFactory.decodeStream(inputStream);
-                            }
-                            catch (MalformedURLException e) {}
+                                String type = xpp.getAttributeValue(null, "type");
+                                String Url = xpp.getAttributeValue(null, "url");
+                                if(type.contains("image")) {
+                                    element.vignette = Url;
+                                }
+                                else if (type.contains("video")||type.contains("audio") )
+                                    element.video = Url;
                         }
                     }
                 }
