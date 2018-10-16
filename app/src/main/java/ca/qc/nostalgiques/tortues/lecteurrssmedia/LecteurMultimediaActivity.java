@@ -5,8 +5,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class LecteurMultimediaActivity extends AppCompatActivity {
     ElementDeFlux element;
+    int indexFlux;
+    int indexElement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,8 +19,10 @@ public class LecteurMultimediaActivity extends AppCompatActivity {
 
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras().getBundle("extra");
+        indexFlux = bundle.getInt("indexFlux");
+        indexElement = bundle.getInt("indexElement");
 
-        element = (ElementDeFlux) bundle.get("element");
+        element = MainActivity.mesFlux.get(indexFlux).elements.get(indexElement);
 
         genererPage();
     }

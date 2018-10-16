@@ -30,13 +30,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<FluxRSS> mesFlux;
+    static ArrayList<FluxRSS> mesFlux;
     ArrayAdapter aa;
     ListView listeFlux;
     EditText texteAdresse;

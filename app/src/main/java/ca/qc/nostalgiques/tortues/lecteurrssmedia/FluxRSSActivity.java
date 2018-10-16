@@ -18,7 +18,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class FluxRSSActivity extends AppCompatActivity {
-    FluxRSS flux;
+    int indexFlux;
     ArrayAdapter aa;
     ListView listeElements;
 
@@ -27,17 +27,18 @@ public class FluxRSSActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fluxrss);
 
-
         Bundle b = getIntent().getExtras();
-        String url = b.getString("url");
-        flux = new FluxRSS(url);
+        indexFlux = b.getInt("indexFlux");
+
+        listeElements = findViewById(R.id.listeElements);
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try
                 {
-                    flux = LecteurRSS.LireFlux(new URL(flux.url));
+                    if(MainActivity.mesFlux.get(indexFlux).elements.size() == 0)
+                        MainActivity.mesFlux.set(indexFlux, LecteurRSS.LireFlux(new URL(MainActivity.mesFlux.get(indexFlux).url)));
                 }
                 catch (MalformedURLException e) { }
                 runOnUiThread(new Runnable() {
@@ -48,13 +49,10 @@ public class FluxRSSActivity extends AppCompatActivity {
                 });
             }
         }).start();
-
-        listeElements = findViewById(R.id.listeElements);
-        afficherDonnees();
     }
 
     private void afficherDonnees(){
-        aa = new ElementDeFluxAdapter(this, 0, flux.elements);
+        aa = new ElementDeFluxAdapter(this, 0, MainActivity.mesFlux.get(indexFlux).elements);
         listeElements.setAdapter(aa);
     }
 }

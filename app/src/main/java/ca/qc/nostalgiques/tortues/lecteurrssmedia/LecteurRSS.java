@@ -45,7 +45,8 @@ public final class LecteurRSS {
                             imageTrouve = true;
                         }
                     }
-                    else flux.nbElementsNonLus++;
+                    else if (xpp.getName().equalsIgnoreCase("item"))
+                        flux.nbElementsNonLus++;
                 }
                 typeEvenement = xpp.next();
             }
@@ -58,7 +59,7 @@ public final class LecteurRSS {
     }
 
     public static FluxRSS LireFlux (URL url) {
-        FluxRSS flux = new FluxRSS(url.toString());
+        FluxRSS flux = ParcourirFlux(url);
         try
         {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();

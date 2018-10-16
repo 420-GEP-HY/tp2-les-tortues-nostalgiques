@@ -55,6 +55,12 @@ public class ElementDeFluxAdapter extends ArrayAdapter<ElementDeFlux> {
             @Override
             public void onClick(View v) {
                 elements.get(position).estLu = true;
+                MainActivity.mesFlux.get(((FluxRSSActivity)getContext()).indexFlux).elements.set(position, elements.get(position));
+                int nonLus = 0;
+                for (ElementDeFlux e : MainActivity.mesFlux.get(((FluxRSSActivity)getContext()).indexFlux).elements)
+                    if(!e.estLu)
+                        nonLus++;
+                MainActivity.mesFlux.get(((FluxRSSActivity)getContext()).indexFlux).nbElementsNonLus = nonLus;
                 notifyDataSetInvalidated();
                 startLecteurMultimediaActivity(position);
             }
@@ -66,7 +72,8 @@ public class ElementDeFluxAdapter extends ArrayAdapter<ElementDeFlux> {
     private void startLecteurMultimediaActivity(int position) {
         Intent lecteurMultimediaActivity = new Intent(getContext(), LecteurMultimediaActivity.class);
         Bundle b = new Bundle();
-        b.putSerializable("element", elements.get(position));
+        b.putInt("indexFlux", ((FluxRSSActivity)getContext()).indexFlux);
+        b.putInt("indexElement", position);
         lecteurMultimediaActivity.putExtra("extra", b);
         startActivity(getContext(), lecteurMultimediaActivity, new Bundle());
     }
