@@ -2,6 +2,8 @@ package ca.qc.nostalgiques.tortues.lecteurrssmedia;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +15,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,9 +39,9 @@ public class ElementDeFluxAdapter extends ArrayAdapter<ElementDeFlux> {
         }
 
         TextView texteTitre = convertView.findViewById(R.id.texteTitre);
-        ImageView imageVignette = convertView.findViewById(R.id.imageVignette);
+         ImageView imageVignette = convertView.findViewById(R.id.imageVignette);
 
-        imageVignette.setImageBitmap(elements.get(position).vignette);
+      
         imageVignette.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

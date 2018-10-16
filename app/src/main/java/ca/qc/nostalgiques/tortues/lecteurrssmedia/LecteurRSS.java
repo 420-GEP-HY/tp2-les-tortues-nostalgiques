@@ -40,8 +40,7 @@ public final class LecteurRSS {
                         if (dansImage)
                         {
                             String imageUrl = xpp.nextText();
-                            InputStream inputStream = new URL(imageUrl).openConnection().getInputStream();
-                            flux.vignette = BitmapFactory.decodeStream(inputStream);
+                            flux.vignette = imageUrl;
                             imageTrouve = true;
                         }
                     }
@@ -89,13 +88,13 @@ public final class LecteurRSS {
                             element.description = xpp.nextText();
                         else if (xpp.getName().equalsIgnoreCase("enclosure"))
                         {
-                            try
-                            {
-                                String imageUrl = xpp.getAttributeValue(null, "url");
-                                InputStream inputStream = new URL(imageUrl).openConnection().getInputStream();
-                                element.vignette = BitmapFactory.decodeStream(inputStream);
-                            }
-                            catch (MalformedURLException e) {}
+
+                                String Url = xpp.getAttributeValue(null, "url");
+                                String type = xpp.getAttributeValue(null,"type");
+                                if(type.contains("video")|| type.contains("audio"))
+                                    element.video = Url;
+                                else if(type.contains("image"))
+                                element.vignette = Url;
                         }
                     }
                 }

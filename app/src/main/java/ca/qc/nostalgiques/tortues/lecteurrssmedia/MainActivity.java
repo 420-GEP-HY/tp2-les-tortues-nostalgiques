@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
                             mesFlux.add(LecteurRSS.ParcourirFlux(new URL(texteAdresse.getText().toString())));
                         } catch (MalformedURLException e) {
                         }
-                        catch (MalformedURLException e) { }
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

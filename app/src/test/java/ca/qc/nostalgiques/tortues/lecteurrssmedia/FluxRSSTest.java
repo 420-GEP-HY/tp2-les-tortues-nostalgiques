@@ -36,8 +36,8 @@ public class FluxRSSTest {
         {
             try
             {
-                FluxRSSActivity activity = new FluxRSSActivity();
-                activity.LireFlux(new URL("TEST"));
+                LecteurRSS lecteur = new LecteurRSS();
+                lecteur.LireFlux(new URL("TEST"));
                 Assert.fail("Ceci doit donner une erreur");
             }
             catch (Exception e) {}
