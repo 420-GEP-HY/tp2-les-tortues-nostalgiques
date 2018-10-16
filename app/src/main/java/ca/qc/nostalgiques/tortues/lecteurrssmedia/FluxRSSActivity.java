@@ -59,7 +59,7 @@ public class FluxRSSActivity extends AppCompatActivity {
     }
 
     public void LireFlux (URL url) {
-        FluxRSS flux = new FluxRSS(url.toString());
+        flux = new FluxRSS(url.toString());
         try
         {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();

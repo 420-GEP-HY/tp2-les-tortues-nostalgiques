@@ -13,4 +13,14 @@
         android:textSize="20dp"
         android:text="Titre"/>
 
+    <TextView
+        android:id="@+id/texteDescription"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@+id/texteTitre"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="27dp"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints" />
+
 </android.support.constraint.ConstraintLayout>

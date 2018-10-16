@@ -23,6 +23,8 @@ public class LecteurMultimediaActivity extends AppCompatActivity {
 
     private void genererPage(){
         TextView texteTitre = findViewById(R.id.texteTitre);
+        TextView texteDescription = findViewById(R.id.texteDescription);
         texteTitre.setText(element.titre);
+        texteDescription.setText(element.description);
     }
 }
