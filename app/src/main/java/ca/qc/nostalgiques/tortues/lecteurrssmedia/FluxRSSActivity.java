@@ -19,8 +19,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class FluxRSSActivity extends AppCompatActivity {
-
-    FluxRSS flux;
+    int indexFlux;
     ArrayAdapter aa;
     ListView listeElements;
 
@@ -29,17 +28,18 @@ public class FluxRSSActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fluxrss);
 
-
         Bundle b = getIntent().getExtras();
-        String url = b.getString("url");
-        flux = new FluxRSS(url);
+        indexFlux = b.getInt("indexFlux");
+
+        listeElements = findViewById(R.id.listeElements);
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try
                 {
-                    LireFlux(new URL(flux.url));
+                    if(MainActivity.mesFlux.get(indexFlux).elements.size() == 0)
+                        MainActivity.mesFlux.set(indexFlux, LecteurRSS.LireFlux(new URL(MainActivity.mesFlux.get(indexFlux).url)));
                 }
                 catch (MalformedURLException e) { }
                 runOnUiThread(new Runnable() {
@@ -50,68 +50,10 @@ public class FluxRSSActivity extends AppCompatActivity {
                 });
             }
         }).start();
-
-        listeElements = findViewById(R.id.listeElements);
-        afficherDonnees();
     }
 
     private void afficherDonnees(){
-        aa = new ElementDeFluxAdapter(this, 0, flux.elements);
+        aa = new ElementDeFluxAdapter(this, 0, MainActivity.mesFlux.get(indexFlux).elements);
         listeElements.setAdapter(aa);
-    }
-
-    public void LireFlux (URL url) {
-        flux = new FluxRSS(url.toString());
-        try
-        {
-            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            factory.setNamespaceAware(false);
-            XmlPullParser xpp = factory.newPullParser();
-            xpp.setInput(url.openConnection().getInputStream(), "UTF_8");
-
-            ElementDeFlux element = new ElementDeFlux();
-
-            int typeEvenement = xpp.getEventType();
-            boolean dansItem = false;
-            while(typeEvenement != XmlPullParser.END_DOCUMENT)
-            {
-                if(typeEvenement == XmlPullParser.START_TAG)
-                {
-                    if (xpp.getName().equalsIgnoreCase("item"))
-                        dansItem = true;
-                    else if (dansItem)
-                    {
-                        if (xpp.getName().equalsIgnoreCase("title"))
-                                element.titre = xpp.nextText();
-                        else if (xpp.getName().equalsIgnoreCase("link"))
-                            element.lien = xpp.nextText();
-                        else if (xpp.getName().equalsIgnoreCase("pubDate"))
-                            element.date = xpp.nextText();
-                        else if (xpp.getName().equalsIgnoreCase("description"))
-                            element.description = xpp.nextText();
-                        else if (xpp.getName().equalsIgnoreCase("enclosure"))
-                        {
-                                String type = xpp.getAttributeValue(null, "type");
-                                String Url = xpp.getAttributeValue(null, "url");
-                                if(type.contains("image")) {
-                                    element.vignette = Url;
-                                }
-                                else if (type.contains("video")||type.contains("audio") )
-                                    element.video = Url;
-                        }
-                    }
-                }
-                else if(typeEvenement == XmlPullParser.END_TAG && xpp.getName().equalsIgnoreCase("item"))
-                {
-                    dansItem = false;
-                    flux.elements.add(element);
-                    element = new ElementDeFlux();
-                }
-                typeEvenement = xpp.next();
-            }
-        }
-        catch (MalformedURLException e) { }
-        catch (XmlPullParserException e) { }
-        catch (IOException e ) { }
     }
 }
